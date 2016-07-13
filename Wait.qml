@@ -10,7 +10,22 @@ Item {
     signal back_to_order
     signal cancel_order
 
-    property int top_menu_heigth: 80
+
+    property int full_picture_height: 1080
+
+
+
+    property int top_menu_relative_height: 95
+    property int order_label_relative_height: 50
+    property int order_to_route_spacer_relative_height: 60
+    property int route_and_cost_container_relative_height: 118
+
+    property int top_menu_heigth: top_menu_relative_height * (height / full_picture_height)
+    property int order_label_height: order_label_relative_height * (height / full_picture_height)
+    property int order_to_route_spacer_height: order_to_route_spacer_relative_height * (height / full_picture_height)
+    property int route_and_cost_container_height: route_and_cost_container_relative_height * (height / full_picture_height)
+
+
     property string top_menu_icon_source: "qrc:/img/back.png"
     property string top_menu_logo_source: "qrc:/img/logo.png"
     property string reload_icon_source: ""
@@ -21,13 +36,26 @@ Item {
     property string route_to_icon_source: "qrc:/img/yellow_arrow.png"
 
     property int horizontal_label_width: 30
-    property int order_to_route_spacer_height: 30
 
     property int cancel_button_heigth: 80
 
     property string set_from_address: ""
     property string set_to_address: ""
     property string set_order_cost: ""
+
+
+
+    FontLoader {
+        id: sf_font
+        source: "qrc:/fonts/SFUIDisplay-Regular.otf"
+    }
+
+    FontLoader {
+        id: sf_font_thin
+        source: "qrc:/fonts/SFUIDisplay-Thin.otf"
+    }
+
+
 
     Rectangle {
         id: top_menu
@@ -225,7 +253,7 @@ Item {
         id: order_label
 
         width: parent.width
-        height: 30
+        height: order_label_height // 30
 
         anchors.top: on_map_container.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -243,14 +271,17 @@ Item {
         Text {
             id: order_label_text
 
-//                text: "The date is: " + new Date().toLocaleDateString(Qt.locale("ru_RU"))
+            //                text: "The date is: " + new Date().toLocaleDateString(Qt.locale("ru_RU"))
+
+
 
             text: qsTr("Заказ на "
                        + new Date().toLocaleDateString(Qt.locale("ru_RU"), "d MMMM")
                        + ", "
                        + new Date().toLocaleTimeString(Qt.locale("ru_RU"), "h:mm"))
 
-            font.pointSize: 12
+            font.pointSize: 10
+            font.family: sf_font.name
 
             anchors.left: order_label_spacer.right
         }
@@ -260,7 +291,7 @@ Item {
         id: driver_search_label
 
         width: parent.width
-        height: 30
+        height: order_label_height // 30
 
         anchors.top: order_label.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -279,7 +310,8 @@ Item {
             id: drive_search_label_text
             text: qsTr("Идет поиск водителя...")
 
-            font.pointSize: 14
+            font.pointSize: 10
+            font.family: sf_font.name
 
             anchors.left: driver_search_label_spacer.right
         }
@@ -298,7 +330,7 @@ Item {
         id: route_and_cost_container
 
         width: parent.width
-        height: parent.height * 0.18
+        height: route_and_cost_container_height // parent.height * 0.18
 
         anchors.top: order_to_route_spacer.bottom
 
@@ -349,7 +381,8 @@ Item {
                     id: route_text_from
                     text: set_from_address // "Московский пр., 205"
 
-                    font.pointSize: 14
+                    font.pointSize: 10
+                    font.family: sf_font.name
 
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -374,7 +407,7 @@ Item {
                 x: route_from_icon.x + route_from_icon.width / 2
                 y: route_from_icon.y + route_from_icon.height
 
-                height: 30
+                height: route_to_icon_wrapper.y - route_from_icon_wrapper.y
                 width: 2
 
                 color: "black"
@@ -390,13 +423,11 @@ Item {
                 height: route_container_item_heigth // parent.height * 0.9
                 width: height
 
-                //            anchors.verticalCenter: parent.verticalCenter
-                //            anchors.left: parent.left
+                anchors.horizontalCenter: route_from_icon_wrapper.horizontalCenter
+                anchors.top: route_from_icon_wrapper.bottom
 
-                //            anchors.top: line_from_to_to.bottom
-
-                x: line_from_to_to.x - width / 2
-                y: line_from_to_to.y + line_from_to_to.height - (height - route_to_icon.height) / 2 //  + height / 2
+//                x: line_from_to_to.x - width / 2
+//                y: line_from_to_to.y + line_from_to_to.height - (height - route_to_icon.height) / 2 //  + height / 2
 
                 color: "transparent"
                 Image {
@@ -426,7 +457,8 @@ Item {
                     id: route_text_to
                     text: set_to_address //"Краснопутиловская ул., 100"
 
-                    font.pointSize: 14
+                    font.pointSize: 10
+                    font.family: sf_font.name
 
                     anchors.verticalCenter: parent.verticalCenter
                 }

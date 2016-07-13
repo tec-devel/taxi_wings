@@ -20,6 +20,13 @@ Item {
     property int top_menu_relative_height: 95
     property int order_menu_relative_height: 132
     property int bottom_menu_relative_height: 266
+    property int route_container_relative_height: 330
+    property int taxi_time_container_relative_height: 80
+    property int route_container_to_clock_spacer_relative_height: 10
+    property int taxi_time_to_rout_req_spacer_relative_height: 32
+    property int order_requirements_container_relative_heigth: 88
+    property int button_go_container_relative_height: 94
+
 
     property real delegate_picture_koef: 227 / 512
 
@@ -30,8 +37,12 @@ Item {
     property int top_menu_heigth: top_menu_relative_height * (height / full_picture_height)
     property int order_menu_row_height: order_menu_relative_height * (height / full_picture_height)
     property int bottom_menu_height: bottom_menu_relative_height * (height / full_picture_height)
-
-
+    property int route_container_height: route_container_relative_height * (height / full_picture_height)
+    property int taxi_time_container_height: taxi_time_container_relative_height * (height / full_picture_height)
+    property int route_container_to_clock_spacer_height: route_container_to_clock_spacer_relative_height * (height / full_picture_height)
+    property int taxi_time_to_rout_req_spacer_height: taxi_time_to_rout_req_spacer_relative_height * (height / full_picture_height)
+    property int order_requirements_container_heigth: order_requirements_container_relative_heigth * (height / full_picture_height)
+    property int button_go_container_height: button_go_container_relative_height * (height / full_picture_height)
 
     //    property int  top_menu_heigth: 80
     //    property int  order_menu_row_height: 100
@@ -42,7 +53,7 @@ Item {
     property string top_menu_logo_source: "qrc:/img/logo.png"
 
 
-    property int route_container_item_heigth: 50
+    property int route_container_item_heigth: route_container_height / 3
 
     property string route_from_icon_source: "qrc:/img/dot.png"
     property string route_to_icon_source: "qrc:/img/yellow_arrow.png"
@@ -58,8 +69,6 @@ Item {
 
     property real white_container_opacity: 1
     property string order_requirements_icon_source: ""
-
-    property int button_go_container_height: 80
 
 
     property string set_button_go_cost_text: ""
@@ -313,7 +322,7 @@ Item {
     Rectangle {
         id: menu_to_list_spacer
 
-        height: parent.height * menu_to_list_spacer_height_koef
+        height: 1 // parent.height * menu_to_list_spacer_height_koef
         width: parent.width
 
         anchors.top: order_menu_list_view_container.bottom
@@ -325,7 +334,7 @@ Item {
         anchors.top: menu_to_list_spacer.bottom
 
         width: parent.width * 0.9
-        height: route_container_item_heigth * 3 // parent.height * 0.35
+        height: route_container_height // item_heigth * 3 // parent.height * 0.35
 
         /// ELEMENTS FROM
 
@@ -366,7 +375,8 @@ Item {
                 id: route_text_from
                 text: set_from_address
 
-                font.pointSize: 14
+                font.pointSize: 10
+                font.family: sf_font.name
 
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -389,7 +399,7 @@ Item {
             x: route_from_icon.x + route_from_icon.width / 2
             y: route_from_icon.y + route_from_icon.height
 
-            height: 30
+            height: route_to_icon_wrapper.y - route_from_icon_wrapper.y // 30
             width: 2
 
             color: "black"
@@ -405,13 +415,13 @@ Item {
             height: route_container_item_heigth // parent.height * 0.9
             width: height
 
-            //            anchors.verticalCenter: parent.verticalCenter
-            //            anchors.left: parent.left
+            anchors.horizontalCenter: route_from_icon_wrapper.horizontalCenter
+            anchors.top: route_from_icon_wrapper.bottom
 
             //            anchors.top: line_from_to_to.bottom
 
             x: line_from_to_to.x - width / 2
-            y: line_from_to_to.y + line_from_to_to.height - (height - route_to_icon.height) / 2 //  + height / 2
+            //            y: line_from_to_to.y + line_from_to_to.height - (height - route_to_icon.height) / 2 //  + height / 2
 
             color: "transparent"
             Image {
@@ -441,7 +451,8 @@ Item {
                 id: route_text_to
                 text: "Краснопутиловская ул., 100"
 
-                font.pointSize: 14
+                font.pointSize: 10
+                font.family: sf_font.name
 
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -466,9 +477,7 @@ Item {
             height: route_container_item_heigth // parent.height * 0.9
             width: height
 
-            //            anchors.verticalCenter: parent.verticalCenter
-            //            anchors.left: parent.left
-
+            anchors.horizontalCenter: route_to_icon_wrapper.horizontalCenter
             anchors.top: route_to_icon_wrapper.bottom
 
             color: "transparent"
@@ -501,25 +510,26 @@ Item {
 
                 color: "lightgray"
 
-                font.pointSize: 14
+                font.pointSize: 10
+                font.family: sf_font.name
 
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            Rectangle {
-                height: 2
-                width: parent.width
+//            Rectangle {
+//                height: 2
+//                width: parent.width
 
-                anchors.bottom: parent.bottom
-                color: "lightgray"
-            }
+//                anchors.bottom: parent.bottom
+//                color: "lightgray"
+//            }
         }
     }
 
     Rectangle {
         id: route_container_to_clock_spacer
 
-        height: parent.height * menu_to_list_spacer_height_koef
+        height: route_container_to_clock_spacer_height //  parent.height * menu_to_list_spacer_height_koef
         width: parent.width
 
         anchors.top: route_container.bottom
@@ -529,8 +539,8 @@ Item {
     Rectangle {
         id: taxi_time_container
 
-        width: parent.width * 0.9
-        height: 50
+        width: parent.width * 0.7
+        height: taxi_time_container_height
 
         anchors.top: route_container_to_clock_spacer.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -539,14 +549,14 @@ Item {
 
             id: clock_icon_wrapper
 
-            height: route_container_item_heigth // parent.height * 0.9
+            height: parent.height * 0.7
             width: height
 
             color: "transparent"
             Image {
                 id: clock_icon
 
-                height: parent.height // * 0.7
+                height: parent.height
                 width: height
 
                 smooth: true
@@ -570,7 +580,8 @@ Item {
 
                 width: parent.width
 
-                font.pointSize: 14
+                font.pointSize: 8
+                font.family: sf_font.name
 
                 text: qsTr("Время подачи автомобиля")
 
@@ -584,41 +595,39 @@ Item {
             Text {
                 id: clock_time_label_
 
-                font.pointSize: 14
+                width: clock_time_label.width
+
+                font.pointSize: 8
+                font.family: sf_font.name
 
                 text: qsTr("Сейчас")
 
-                color: "maroon"
-
+                anchors.top: clock_time_label.bottom
                 horizontalAlignment: Text.Center
 
-                anchors.top: clock_time_label.bottom
-
-                width: clock_time_label.width
+                color: "maroon"
             }
         }
     }
 
-
     Rectangle {
         id: taxi_time_to_rout_req_spacer
 
-        height: parent.height * menu_to_list_spacer_height_koef
+        height: taxi_time_to_rout_req_spacer_height
         width: parent.width
 
         anchors.top: taxi_time_container.bottom
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
-
     Rectangle {
         id: order_requirements_container
 
         width: parent.width * 0.9
-        height: route_container_item_heigth
+        height: order_requirements_container_heigth
 
         border.width: 1
-        border.color: "lightgray"
+        border.color: "#869092"
 
         radius: 5
 
@@ -653,12 +662,15 @@ Item {
             id: order_requirements_text
             text: qsTr("Пожелания к заказу")
 
+            font.family: sf_font.name
+            font.pointSize: 8
+
             anchors.right: order_requirements_wrapper.left
             anchors.verticalCenter: order_requirements_wrapper.verticalCenter
 
             width: parent.width - order_requirements_wrapper.width
 
-            color: "lightgray"
+            color: "#869092"
 
             horizontalAlignment: Text.Center
         }
@@ -670,7 +682,7 @@ Item {
         id: button_go_container
 
         width: parent.width
-        height: 80
+        height: button_go_container_height
 
         anchors.bottom: parent.bottom
 
@@ -702,7 +714,8 @@ Item {
 
                 anchors.centerIn: parent
 
-                font.pointSize: 16
+                font.family: sf_font.name
+                font.pointSize: 14
 
                 text: set_button_go_cost_text + " р"
             }
@@ -722,7 +735,8 @@ Item {
             Text {
                 anchors.centerIn: parent
 
-                font.pointSize: 16
+                font.pointSize: 10
+                font.family: sf_font.name
 
                 text: "ЗАКАЗАТЬ"
             }
