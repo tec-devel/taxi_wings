@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Main.qml</file>
+        <file>MainForm.ui.qml</file>
+        <file>marker.png</file>
+        <file>supervisor.qml</file>
+        <file>Order.qml</file>
+        <file>img/back.png</file>
+        <file>img/dot_plus.png</file>
+        <file>img/dot.png</file>
+        <file>img/grey_menu.png</file>
+        <file>img/logo.png</file>
+        <file>img/man_on_map.png</file>
+        <file>img/menu.png</file>
+        <file>img/on_map_icon.png</file>
+        <file>img/pencil.png</file>
+        <file>img/renew.png</file>
+        <file>img/taxi_top.png</file>
+        <file>img/yellow_arrow.png</file>
+        <file>img/yellow_triangle.png</file>
+        <file>img/black_pencil.png</file>
+        <file>img/clock.png</file>
+        <file>Wait.qml</file>
+        <file>img/ajax-loader.gif</file>
+        <file>img/taxi_crop.png</file>
+        <file>img/taxi_rubl_crop.png</file>
+        <file>img/taxi_select_crop.png</file>
+        <file>img/taxi_select_percent_crop.png</file>
+        <file>img/taxi_select_rubl_crop.png</file>
+        <file>img/taxi_percent_crop.png</file>
+        <file>fonts/SFUIDisplay-Black.otf</file>
+        <file>fonts/SFUIDisplay-Bold.otf</file>
+        <file>fonts/SFUIDisplay-Heavy.otf</file>
+        <file>fonts/SFUIDisplay-Light.otf</file>
+        <file>fonts/SFUIDisplay-Medium.otf</file>
+        <file>fonts/SFUIDisplay-Regular.otf</file>
+        <file>fonts/SFUIDisplay-Semibold.otf</file>
+        <file>fonts/SFUIDisplay-Thin.otf</file>
+        <file>fonts/SFUIDisplay-Ultralight.otf</file>
+    </qresource>
+</RCC>
