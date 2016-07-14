@@ -8,6 +8,18 @@ Window {
 
     title: qsTr("Hello world")
 
+    property int splash_timer_interval: 5
+
+    Timer{
+        id: splash_timer
+        interval: splash_timer_interval
+
+        repeat: false
+        onTriggered: {
+            orders.visible = true;
+            splash.visible = false;
+        }
+    }
 
     Timer{
         id:test_timer
@@ -72,6 +84,8 @@ Window {
     }
 
     Component.onCompleted: {
+        splash_timer.start();
+
         main.get_order.connect(getOrder)
 
         order.back_to_main.connect(backToMain)
@@ -80,13 +94,26 @@ Window {
 
         wait.back_to_order.connect(backToOrder)
         wait.cancel_order.connect(cancelOrder)
+    }
 
+    Splash {
+        id: splash
+
+        visible: true
+        anchors.fill: parent
+    }
+
+    Orders {
+        id: orders
+
+        visible: false
+        anchors.fill: parent
     }
 
     Main {
         id: main
 
-        visible: true
+        visible: false
         anchors.fill: parent
     }
 

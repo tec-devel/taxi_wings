@@ -37,5 +37,8 @@
         <file>fonts/SFUIDisplay-Semibold.otf</file>
         <file>fonts/SFUIDisplay-Thin.otf</file>
         <file>fonts/SFUIDisplay-Ultralight.otf</file>
+        <file>Splash.qml</file>
+        <file>Orders.qml</file>
+        <file>img/1.jpg</file>
     </qresource>
 </RCC>
