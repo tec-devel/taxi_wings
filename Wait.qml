@@ -18,31 +18,30 @@ Item {
     property int top_menu_relative_height: 95
     property int order_label_relative_height: 50
     property int order_to_route_spacer_relative_height: 60
-    property int route_and_cost_container_relative_height: 118
+    property int route_and_cost_container_relative_height: 200
+    property int cancel_button_relative_height: 88
 
     property int top_menu_heigth: top_menu_relative_height * (height / full_picture_height)
     property int order_label_height: order_label_relative_height * (height / full_picture_height)
     property int order_to_route_spacer_height: order_to_route_spacer_relative_height * (height / full_picture_height)
     property int route_and_cost_container_height: route_and_cost_container_relative_height * (height / full_picture_height)
+    property int cancel_button_height: cancel_button_relative_height * (height / full_picture_height)
 
 
     property string top_menu_icon_source: "qrc:/img/back.png"
     property string top_menu_logo_source: "qrc:/img/logo.png"
     property string reload_icon_source: ""
 
-    property int route_container_item_heigth: 50
+    property int route_container_item_heigth: route_and_cost_container_height / 2
 
     property string route_from_icon_source: "qrc:/img/dot.png"
     property string route_to_icon_source: "qrc:/img/yellow_arrow.png"
 
     property int horizontal_label_width: 30
 
-    property int cancel_button_heigth: 80
-
     property string set_from_address: ""
     property string set_to_address: ""
     property string set_order_cost: ""
-
 
 
     FontLoader {
@@ -287,6 +286,7 @@ Item {
         }
     }
 
+
     Rectangle {
         id: driver_search_label
 
@@ -342,6 +342,7 @@ Item {
             width: parent.width * 0.7
             height: parent.height
 
+
             /// ELEMENTS FROM
 
             Rectangle {
@@ -381,8 +382,10 @@ Item {
                     id: route_text_from
                     text: set_from_address // "Московский пр., 205"
 
-                    font.pointSize: 10
+                    font.pointSize: 8
                     font.family: sf_font.name
+
+                    wrapMode: Text.WordWrap
 
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -457,8 +460,10 @@ Item {
                     id: route_text_to
                     text: set_to_address //"Краснопутиловская ул., 100"
 
-                    font.pointSize: 10
+                    font.pointSize: 8
                     font.family: sf_font.name
+
+                    wrapMode: Text.WordWrap
 
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -483,11 +488,13 @@ Item {
             width: parent.width * 0.3
 
             anchors.left: route_container.right
+            anchors.verticalCenter: route_container.verticalCenter
 
             Text {
                 anchors.centerIn: parent
 
                 font.pointSize: 18
+                font.family: sf_font.name
 
                 text: set_order_cost + " р" // "115 р"
             }
@@ -498,7 +505,7 @@ Item {
         id: cancel_button
 
         width: parent.width
-        height: cancel_button_heigth
+        height: cancel_button_height
 
         color: "#fcc900"
 
@@ -509,7 +516,8 @@ Item {
             text: qsTr("ОТМЕНИТЬ ЗАКАЗ")
             anchors.centerIn: parent
 
-            font.pointSize: 16
+            font.pointSize: 10
+            font.family: sf_font_thin.name
         }
 
         MouseArea {
