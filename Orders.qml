@@ -4,6 +4,9 @@ import QtGraphicalEffects 1.0
 Rectangle {
     id: container
 
+    signal goto_orders_order
+    signal goto_orders_order_with_address(string json_string)
+
     property int route_container_item_heigth: 20
     property string route_from_icon_source: "qrc:/img/dot.png"
 
@@ -14,6 +17,10 @@ Rectangle {
 
     property int top_menu_relative_height: 95
     property int top_menu_heigth: top_menu_relative_height * (height / full_picture_height)
+
+    property int top_menu_font_size: 12
+    property string yelow_collor_code: "#fcc900"
+
 
     FontLoader {
         id: sf_font
@@ -71,7 +78,7 @@ Rectangle {
                     anchors.fill: parent
 
                     onClicked: {
-                        container.back_to_main()
+                        container.goto_orders_order()
                     }
                 }
             }
@@ -82,6 +89,7 @@ Rectangle {
             text: qsTr("ЗАКАЗ")
 
             font.family: sf_font.name
+            font.pointSize: top_menu_font_size
 
             anchors.left: top_menu_icon_wrapper.right
             anchors.right: top_menu_logo.left
@@ -101,17 +109,34 @@ Rectangle {
             anchors.centerIn: parent
         }
 
-        Text {
-            id: top_trips_text
-            text: qsTr("ПОЕЗДКИ")
-
-            font.family: sf_font.name
-
+        Rectangle {
             anchors.right: parent.right
             anchors.left: top_menu_logo.right
-            anchors.verticalCenter: parent.verticalCenter
 
-            horizontalAlignment: Text.Center
+            height: parent.height
+
+            Text {
+                id: top_trips_text
+                text: qsTr("ПОЕЗДКИ")
+
+                font.family: sf_font.name
+                font.pointSize: top_menu_font_size
+
+                anchors.centerIn: parent
+            }
+
+            Rectangle {
+                id: top_current_text_acitve
+
+                height: 3
+
+                width: parent.width
+
+                color: yelow_collor_code
+
+                anchors.bottom: parent.bottom
+            }
+
         }
     }
 
@@ -174,15 +199,15 @@ Rectangle {
                 model: delegate_model
             }
 
-            DropShadow {
-                anchors.fill: delegate_list_view
-                horizontalOffset: 0
-                verticalOffset: 1
-                radius: 4.0
-                samples: 17
-                color: "#80000000"
-                source: delegate_list_view
-            }
+//            DropShadow {
+//                anchors.fill: delegate_list_view
+//                horizontalOffset: 0
+//                verticalOffset: 1
+//                radius: 4.0
+//                samples: 17
+//                color: "#80000000"
+//                source: delegate_list_view
+//            }
 
 
             Component {
@@ -200,7 +225,7 @@ Rectangle {
                         height: route_container_item_heigth
                         width: height
 
-//                        anchors.left: parent.left
+                        //                        anchors.left: parent.left
 
                         color: "transparent"
                         Image {

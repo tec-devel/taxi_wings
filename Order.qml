@@ -5,12 +5,16 @@ Item {
 
     id: container
 
-    signal back_to_main
+    signal goto_order_main
+    signal goto_order_orders
+
     signal get_cost(string address_from,
                     string address_to)
     signal get_order_go(string address_from,
                         string address_to,
                         string cost)
+
+
 
 
 
@@ -44,8 +48,9 @@ Item {
     property int order_requirements_container_heigth: order_requirements_container_relative_heigth * (height / full_picture_height)
     property int button_go_container_height: button_go_container_relative_height * (height / full_picture_height)
 
-    //    property int  top_menu_heigth: 80
-    //    property int  order_menu_row_height: 100
+    property int top_menu_font_size: 12
+    property string yelow_collor_code: "#fcc900"
+
     property real delegate_active_marker_height_koef: 0.05
 
     property real menu_to_list_spacer_height_koef: 0.02
@@ -152,23 +157,43 @@ Item {
                     anchors.fill: parent
 
                     onClicked: {
-                        container.back_to_main()
+                        container.goto_order_main()
                     }
                 }
             }
         }
 
-        Text {
-            id: top_current_text
-            text: qsTr("ЗАКАЗ")
-
-            font.family: sf_font.name
+        Rectangle {
+            id: top_current_text_wrapper
 
             anchors.left: top_menu_icon_wrapper.right
             anchors.right: top_menu_logo.left
-            anchors.verticalCenter: parent.verticalCenter
 
-            horizontalAlignment: Text.Center
+            height: parent.height
+
+            Text {
+                id: top_current_text
+                text: qsTr("ЗАКАЗ")
+
+                font.family: sf_font.name
+                font.pointSize: top_menu_font_size
+
+                anchors.centerIn: parent
+
+                horizontalAlignment: Text.Center
+            }
+
+            Rectangle {
+                id: top_current_text_acitve
+
+                height: 3
+
+                width: parent.width
+
+                color: yelow_collor_code
+
+                anchors.bottom: parent.bottom
+            }
         }
 
         Image {
@@ -182,17 +207,29 @@ Item {
             anchors.centerIn: parent
         }
 
-        Text {
-            id: top_trips_text
-            text: qsTr("ПОЕЗДКИ")
-
-            font.family: sf_font.name
-
+        Rectangle {
             anchors.right: parent.right
             anchors.left: top_menu_logo.right
-            anchors.verticalCenter: parent.verticalCenter
 
-            horizontalAlignment: Text.Center
+            height: parent.height
+
+            Text {
+                id: top_trips_text
+                text: qsTr("ПОЕЗДКИ")
+
+                font.family: sf_font.name
+                font.pointSize: top_menu_font_size
+
+                anchors.centerIn: parent
+            }
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    container.goto_order_orders()
+                }
+            }
         }
     }
 
@@ -695,7 +732,7 @@ Item {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
 
-            color: "#fcc900"
+            color: yelow_collor_code
 
             AnimatedImage {
                 id: button_cost_calc_indicator
@@ -715,7 +752,7 @@ Item {
                 anchors.centerIn: parent
 
                 font.family: sf_font.name
-                font.pointSize: 14
+                font.pointSize: top_menu_font_size
 
                 text: set_button_go_cost_text + " р"
             }
@@ -729,7 +766,7 @@ Item {
             anchors.left: button_go_cost.right
             anchors.verticalCenter: parent.verticalCenter
 
-            color: "#fcc900"
+            color: yelow_collor_code
 
 
             Text {

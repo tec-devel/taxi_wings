@@ -16,7 +16,7 @@ Window {
 
         repeat: false
         onTriggered: {
-            orders.visible = true;
+            order.visible = true;
             splash.visible = false;
         }
     }
@@ -47,16 +47,16 @@ Window {
         order.visible = true;
     }
 
-    function backToMain()
+    function gotoOrderMain()
     {
-        order.visible = false;
         main.visible = true;
+        order.visible = false;
     }
 
-    function backToOrder()
+    function gotoOrderOrders()
     {
-        order.visible = true;
-        wait.visible = false;
+        orders.visible = true;
+        order.visible = false;
     }
 
     function getCost(address_from,
@@ -77,20 +77,46 @@ Window {
         wait.set_order_cost = cost;
     }
 
+
+    function backToOrder()
+    {
+        order.visible = true;
+        wait.visible = false;
+    }
+
     function cancelOrder()
     {
        wait.visible = false;
        main.visible = true;
     }
 
+
+    function gotoOrdersOrder()
+    {
+        order.visible = true;
+        orders.visible = false;
+    }
+
+    function gotoOrdersOrderWithAddress(json_string)
+    {
+    }
+
+
+
     Component.onCompleted: {
         splash_timer.start();
 
         main.get_order.connect(getOrder)
 
-        order.back_to_main.connect(backToMain)
+        order.goto_order_main.connect(gotoOrderMain)
+        order.goto_order_orders.connect(gotoOrderOrders)
+
         order.get_cost.connect(getCost)
         order.get_order_go.connect(getOrderGo)
+
+        orders.goto_orders_order(gotoOrdersOrder)
+        orders.goto_orders_order_with_address(gotoOrdersOrderWithAddress)
+
 
         wait.back_to_order.connect(backToOrder)
         wait.cancel_order.connect(cancelOrder)
