@@ -60,21 +60,18 @@ Window {
         order.visible = false;
     }
 
-    function getCost(address_from,
-                     address_to)
+    function getCost(route_json)
     {
         test_timer.start()
     }
 
-    function getOrderGo(address_from,
-                        address_to,
+    function getOrderGo(route_json,
                         cost)
     {
         order.visible = false;
         wait.visible = true;
 
-        wait.set_from_address = address_from;
-        wait.set_to_address = address_to;
+        wait.set_route_json = route_json;
         wait.set_order_cost = cost;
     }
 
@@ -104,10 +101,11 @@ Window {
     {
     }
 
-
-
     Component.onCompleted: {
         splash_timer.start();
+
+        // TODO: выставление минималки
+        order.set_button_go_cost_text = 130;
 
         main.get_order.connect(getOrder)
 

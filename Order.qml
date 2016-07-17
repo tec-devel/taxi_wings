@@ -8,10 +8,9 @@ Item {
     signal goto_order_main
     signal goto_order_orders
 
-    signal get_cost(string address_from,
-                    string address_to)
-    signal get_order_go(string address_from,
-                        string address_to,
+    signal get_cost(string route_json)
+
+    signal get_order_go(string route_json,
                         string cost)
 
 
@@ -83,10 +82,8 @@ Item {
 
     property string set_address_json_string: ""
 
-
     onSet_button_go_cost_textChanged: {
-        button_cost_calc_indicator.visible = false;
-        button_go_cost_text.visible = true;
+        button_go_cost.finished_get();
     }
 
     onSet_address_json_stringChanged: {
@@ -107,20 +104,6 @@ Item {
                 route_list_model.append({"address_text":""});
         }
     }
-
-    onVisibleChanged: {
-        if(visible)
-        {
-            set_button_go_cost_text = ""
-
-            button_cost_calc_indicator.visible = true;
-            button_go_cost_text.visible = false;
-
-            //            container.get_cost(route_text_from.text,
-            //                               route_text_to.text);
-        }
-    }
-
 
     FontLoader {
         id: sf_font
@@ -415,6 +398,27 @@ Item {
 
         ListModel {
             id: route_list_model
+
+            function json()
+            {
+                var json_obj = [];
+                var address_count = 0;
+
+                for(var i = 0; i < route_list_model.count; i++)
+                {
+                    var address_obj = route_list_model.get(i);
+                    if(address_obj.address_text !== "")
+                    {
+                        json_obj[address_count] = route_list_model.get(i);
+                        address_count++;
+                    }
+                }
+
+                if(address_count >= 1)
+                    return JSON.stringify(json_obj);
+                else
+                    return "";
+            }
         }
 
         Component {
@@ -437,7 +441,7 @@ Item {
                     Image {
                         id: route_from_icon_delegate
 
-                        height: parent.height * 0.3
+                        height: (index != (route_list_view.count - 1)) ? parent.height * 0.3 : parent.height * 0.7
                         width: height
 
                         smooth: true
@@ -506,8 +510,11 @@ Item {
 
                         route_list_model.set(index, address_obj);
 
-                        console.log(route_text_input_delegate.text);
-                        console.log(index);
+//                        console.log(route_text_input_delegate.text);
+//                        console.log(index);
+
+                        button_go_cost.start_get();
+                        container.get_cost(route_list_model.json());
                     }
 
                     Text {
@@ -797,6 +804,20 @@ Item {
 
             color: yelow_collor_code
 
+            function start_get()
+            {
+                set_button_go_cost_text = "";
+
+                button_cost_calc_indicator.visible = true;
+                button_go_cost_text.visible = false;
+            }
+
+            function finished_get()
+            {
+                button_go_cost_text.visible = true;
+                button_cost_calc_indicator.visible = false;
+            }
+
             AnimatedImage {
                 id: button_cost_calc_indicator
                 source: "qrc:/img/ajax-loader.gif"
@@ -804,13 +825,15 @@ Item {
 
                 height: parent.height * 0.5
                 width: height
+
+                visible: false
             }
 
             Text {
 
                 id: button_go_cost_text
 
-                visible: false
+                visible: true
 
                 anchors.centerIn: parent
 
@@ -845,9 +868,25 @@ Item {
                 anchors.fill: parent
 
                 onClicked: {
-                    container.get_order_go(route_text_from.text,
-                                           route_text_to.text,
-                                           set_button_go_cost_text);
+                    var json_obj = [];
+                    var address_count = 0;
+
+                    for(var i = 0; i < route_list_model.count; i++)
+                    {
+                        var address_obj = route_list_model.get(i);
+                        if(address_obj.address_text !== "")
+                        {
+                            json_obj[address_count] = route_list_model.get(i);
+                            address_count++;
+                        }
+                    }
+
+                    if(address_count > 1)
+                    {
+                        // TODO: вставить проверку на пустой json
+                        container.get_order_go(route_list_model.json(), // JSON.stringify(json_obj),
+                                               set_button_go_cost_text);
+                    }
                 }
             }
         }
