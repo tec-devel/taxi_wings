@@ -524,7 +524,12 @@ Rectangle {
                             anchors.fill: parent
 
                             onClicked: {
-                                container.get_order(address_street_text.text,
+                                var json_obj = [{"address_text" : address_street_text.text}];
+                                var json_string = JSON.stringify(json_obj);
+
+                                console.log(json_string)
+
+                                container.get_order(json_string,
                                                     order_menu_list_view.currentIndex);
                             }
                         }

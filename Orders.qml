@@ -78,7 +78,9 @@ Rectangle {
                     anchors.fill: parent
 
                     onClicked: {
-                        container.goto_orders_order()
+
+                        console.log("4321");
+                        container.goto_orders_order();
                     }
                 }
             }
@@ -96,192 +98,201 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
 
             horizontalAlignment: Text.Center
+
+            MouseArea{
+                anchors.fill: parent
+
+                onClicked: {
+                    console.log("4321");
+                    container.goto_orders_order();
+                }
+            }
         }
 
-        Image {
-            id: top_menu_logo
+            Image {
+                id: top_menu_logo
 
-            height: parent.height
-            width: height
+                height: parent.height
+                width: height
 
-            source: top_menu_logo_source
-
-            anchors.centerIn: parent
-        }
-
-        Rectangle {
-            anchors.right: parent.right
-            anchors.left: top_menu_logo.right
-
-            height: parent.height
-
-            Text {
-                id: top_trips_text
-                text: qsTr("ПОЕЗДКИ")
-
-                font.family: sf_font.name
-                font.pointSize: top_menu_font_size
+                source: top_menu_logo_source
 
                 anchors.centerIn: parent
             }
 
             Rectangle {
-                id: top_current_text_acitve
+                anchors.right: parent.right
+                anchors.left: top_menu_logo.right
 
-                height: 3
+                height: parent.height
 
-                width: parent.width
+                Text {
+                    id: top_trips_text
+                    text: qsTr("ПОЕЗДКИ")
 
-                color: yelow_collor_code
+                    font.family: sf_font.name
+                    font.pointSize: top_menu_font_size
 
-                anchors.bottom: parent.bottom
-            }
-
-        }
-    }
-
-    ListModel {
-        id: orders_model
-    }
-
-    ListView{
-        id: orders_list_view
-        model: orders_model
-
-        width: parent.width
-        height: parent.height
-
-        delegate: orders_list_view_delegate
-
-        anchors.top: top_menu.bottom
-    }
-
-    Component {
-        id: orders_list_view_delegate
-
-        //        property string _json_string: json_string
-
-        Rectangle {
-            id: orders_list_view_delegate_rect
-
-            width: orders_list_view.width
-            height: delegate_list_view.height + (delegate_list_view.height * 0.1)
-
-            color: "transparent"
-
-
-            Component.onCompleted: {
-
-                var json_obj = JSON.parse(json_string);
-
-                for(var i = 0; i < json_obj.length; i++)
-                {
-                    delegate_model.append(json_obj[i]);
+                    anchors.centerIn: parent
                 }
-            }
-
-            ListModel {
-                id: delegate_model
-            }
-
-            ListView {
-                id: delegate_list_view
-
-                delegate: delegate_list_delegate
-
-                width: parent.width * 0.9
-                height: count * 20
-
-                anchors.centerIn: parent
-
-                clip: false
-
-                model: delegate_model
-            }
-
-//            DropShadow {
-//                anchors.fill: delegate_list_view
-//                horizontalOffset: 0
-//                verticalOffset: 1
-//                radius: 4.0
-//                samples: 17
-//                color: "#80000000"
-//                source: delegate_list_view
-//            }
-
-
-            Component {
-                id: delegate_list_delegate // lol
 
                 Rectangle {
+                    id: top_current_text_acitve
+
+                    height: 3
 
                     width: parent.width
-                    height: 20
+
+                    color: yelow_collor_code
+
+                    anchors.bottom: parent.bottom
+                }
+
+            }
+        }
+
+        ListModel {
+            id: orders_model
+        }
+
+        ListView{
+            id: orders_list_view
+            model: orders_model
+
+            width: parent.width
+            height: parent.height
+
+            delegate: orders_list_view_delegate
+
+            anchors.top: top_menu.bottom
+        }
+
+        Component {
+            id: orders_list_view_delegate
+
+            //        property string _json_string: json_string
+
+            Rectangle {
+                id: orders_list_view_delegate_rect
+
+                width: orders_list_view.width
+                height: delegate_list_view.height + (delegate_list_view.height * 0.1)
+
+                color: "transparent"
+
+
+                Component.onCompleted: {
+
+                    var json_obj = JSON.parse(json_string);
+
+                    for(var i = 0; i < json_obj.length; i++)
+                    {
+                        delegate_model.append(json_obj[i]);
+                    }
+                }
+
+                ListModel {
+                    id: delegate_model
+                }
+
+                ListView {
+                    id: delegate_list_view
+
+                    delegate: delegate_list_delegate
+
+                    width: parent.width * 0.9
+                    height: count * 20
+
+                    anchors.centerIn: parent
+
+                    clip: false
+
+                    model: delegate_model
+                }
+
+                //            DropShadow {
+                //                anchors.fill: delegate_list_view
+                //                horizontalOffset: 0
+                //                verticalOffset: 1
+                //                radius: 4.0
+                //                samples: 17
+                //                color: "#80000000"
+                //                source: delegate_list_view
+                //            }
+
+
+                Component {
+                    id: delegate_list_delegate // lol
 
                     Rectangle {
 
-                        id: route_from_icon_wrapper
+                        width: parent.width
+                        height: 20
 
-                        height: route_container_item_heigth
-                        width: height
+                        Rectangle {
 
-                        //                        anchors.left: parent.left
+                            id: route_from_icon_wrapper
 
-                        color: "transparent"
-                        Image {
-                            id: route_from_icon
-
-                            height: parent.height * 0.3
+                            height: route_container_item_heigth
                             width: height
 
-                            smooth: true
+                            //                        anchors.left: parent.left
 
-                            anchors.centerIn: parent
+                            color: "transparent"
+                            Image {
+                                id: route_from_icon
 
-                            source: route_from_icon_source
-                        }
-                    }
+                                height: parent.height * 0.3
+                                width: height
 
-                    Rectangle {
-                        anchors.left: route_from_icon_wrapper.right
-                        anchors.verticalCenter: route_from_icon_wrapper.verticalCenter
+                                smooth: true
 
-                        width: parent.width - route_from_icon_wrapper.width
-                        height: route_container_item_heigth
+                                anchors.centerIn: parent
 
-                        color: "transparent"
-
-                        Text {
-                            id: route_text_from
-                            text: address_text // "Московский пр., 205"
-
-                            font.pointSize: 8
-                            font.family: sf_font.name
-
-                            wrapMode: Text.WordWrap
-
-                            anchors.verticalCenter: parent.verticalCenter
+                                source: route_from_icon_source
+                            }
                         }
 
                         Rectangle {
-                            height: 2
-                            width: parent.width
+                            anchors.left: route_from_icon_wrapper.right
+                            anchors.verticalCenter: route_from_icon_wrapper.verticalCenter
 
-                            visible: false
+                            width: parent.width - route_from_icon_wrapper.width
+                            height: route_container_item_heigth
 
-                            anchors.bottom: parent.bottom
-                            color: "lightgray"
+                            color: "transparent"
+
+                            Text {
+                                id: route_text_from
+                                text: address_text // "Московский пр., 205"
+
+                                font.pointSize: 8
+                                font.family: sf_font.name
+
+                                wrapMode: Text.WordWrap
+
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            Rectangle {
+                                height: 2
+                                width: parent.width
+
+                                visible: false
+
+                                anchors.bottom: parent.bottom
+                                color: "lightgray"
+                            }
                         }
                     }
                 }
             }
+
+
+
+
+
+
+
         }
-
-
-
-
-
-
-
     }
-}

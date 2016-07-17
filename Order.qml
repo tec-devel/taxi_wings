@@ -29,6 +29,7 @@ Item {
     property int route_container_to_clock_spacer_relative_height: 10
     property int taxi_time_to_rout_req_spacer_relative_height: 32
     property int order_requirements_container_relative_heigth: 88
+    property int button_add_adress_container_relative_heigth: 88
     property int button_go_container_relative_height: 94
 
 
@@ -46,6 +47,7 @@ Item {
     property int route_container_to_clock_spacer_height: route_container_to_clock_spacer_relative_height * (height / full_picture_height)
     property int taxi_time_to_rout_req_spacer_height: taxi_time_to_rout_req_spacer_relative_height * (height / full_picture_height)
     property int order_requirements_container_heigth: order_requirements_container_relative_heigth * (height / full_picture_height)
+    property int button_add_adress_container_heigth: button_add_adress_container_relative_heigth * (height / full_picture_height)
     property int button_go_container_height: button_go_container_relative_height * (height / full_picture_height)
 
     property int top_menu_font_size: 12
@@ -62,28 +64,48 @@ Item {
 
     property string route_from_icon_source: "qrc:/img/dot.png"
     property string route_to_icon_source: "qrc:/img/yellow_arrow.png"
-    property string route_add_icon_source: "qrc:/img/dot_plus.png"
 
     property string clock_icon_source: "qrc:/img/clock.png"
 
     property real route_container_width_koef: 0.9
     property real route_container_height_koef: 0.5
 
-    property string add_address_icon_source: ""
+    property string add_address_icon_source: "qrc:/img/dot_plus.png"
     property real add_address_button_width_koef: 0.9
 
     property real white_container_opacity: 1
     property string order_requirements_icon_source: ""
 
 
+    property int set_list_current_index: 0
+
     property string set_button_go_cost_text: ""
 
-    property int set_list_current_index: 0
-    property string set_from_address: ""
+    property string set_address_json_string: ""
+
 
     onSet_button_go_cost_textChanged: {
         button_cost_calc_indicator.visible = false;
         button_go_cost_text.visible = true;
+    }
+
+    onSet_address_json_stringChanged: {
+        var json_route_object = JSON.parse(set_address_json_string);
+
+        console.log(json_route_object.length, set_address_json_string);
+        console.log(json_route_object);
+
+
+        if(json_route_object.length >= 1)
+        {
+            route_list_model.clear();
+
+            for(var i = 0; i < json_route_object.length; i++)
+                route_list_model.append(json_route_object[i])
+
+            if(json_route_object.length === 1)
+                route_list_model.append({"address_text":""});
+        }
     }
 
     onVisibleChanged: {
@@ -94,8 +116,8 @@ Item {
             button_cost_calc_indicator.visible = true;
             button_go_cost_text.visible = false;
 
-            container.get_cost(route_text_from.text,
-                               route_text_to.text);
+            //            container.get_cost(route_text_from.text,
+            //                               route_text_to.text);
         }
     }
 
@@ -121,6 +143,11 @@ Item {
         order_list_model.append({"delegate_image_text" : "Минивен",
                                     "delegate_image_source" : "qrc:/img/taxi_crop.png",
                                     "delegate_image_source_active" : "qrc:/img/taxi_select_crop.png"});
+
+        //        route_list_model.append({"address_text":"address1"});
+        //        route_list_model.append({"address_text":"address2"});
+        //        route_list_model.append({"address_text":"address3"});
+        //        route_list_model.append({"address_text":"address4"});
     }
 
     Rectangle {
@@ -252,6 +279,8 @@ Item {
         ListView {
             id: order_menu_list_view
 
+            width: parent.width
+
             model: order_list_model
             delegate: order_menu_delegate
 
@@ -373,195 +402,229 @@ Item {
         width: parent.width * 0.9
         height: route_container_height // item_heigth * 3 // parent.height * 0.35
 
-        /// ELEMENTS FROM
+        ListView {
+            id: route_list_view
+            delegate: route_list_view_delegate
+            model: route_list_model
+
+            clip: true
+
+            width: parent.width
+            height: ((count * route_container_item_heigth) > parent.height) ? parent.height : count * route_container_item_heigth
+        }
+
+        ListModel {
+            id: route_list_model
+        }
+
+        Component {
+            id: route_list_view_delegate
+
+            Rectangle {
+                width: route_list_view.width
+                height: route_container_item_heigth
+
+                Rectangle {
+
+                    id: route_from_icon_wrapper_delegate
+
+                    height: parent.height // route_container_item_heigth
+                    width: height
+
+                    anchors.left: parent.left
+
+                    color: "transparent"
+                    Image {
+                        id: route_from_icon_delegate
+
+                        height: parent.height * 0.3
+                        width: height
+
+                        smooth: true
+
+                        anchors.centerIn: parent
+
+                        source: (index != (route_list_view.count - 1)) ? route_from_icon_source : route_to_icon_source
+                    }
+                }
+
+
+                Rectangle {
+                    id: top_line
+
+                    y: 0
+                    x:
+                        route_from_icon_wrapper_delegate.width / 2
+
+                    width: 2
+                    height: (route_from_icon_wrapper_delegate.height - route_from_icon_delegate.height) / 2
+
+                    color: "black"
+
+                    visible: index != 0
+                }
+
+                Rectangle {
+                    id: bottom_line
+
+                    y:
+                        (route_from_icon_wrapper_delegate.height - route_from_icon_delegate.height) / 2 +
+                        route_from_icon_delegate.height
+
+                    x:
+                        route_from_icon_wrapper_delegate.width / 2
+
+                    width: 2
+                    height: (route_from_icon_wrapper_delegate.height - route_from_icon_delegate.height) / 2
+
+                    color: "black"
+
+                    visible: index != (route_list_view.count - 1)
+                }
+
+                Rectangle {
+                    anchors.left: route_from_icon_wrapper_delegate.right
+                    anchors.verticalCenter: route_from_icon_wrapper_delegate.verticalCenter
+
+                    width: parent.width - route_from_icon_wrapper_delegate.width
+                    height: route_container_item_heigth
+
+                    color: "transparent"
+
+                    Component.onCompleted: {
+                        route_text_input_delegate.
+                        editingFinished.
+                        connect(addressEditingFinished);
+                    }
+
+                    function addressEditingFinished()
+                    {
+                        route_text_delegate.visible = true;
+                        route_text_input_delegate.visible = false;
+
+                        var address_obj = {"address_text":route_text_input_delegate.text};
+
+                        route_list_model.set(index, address_obj);
+
+                        console.log(route_text_input_delegate.text);
+                        console.log(index);
+                    }
+
+                    Text {
+                        id: route_text_delegate
+
+                        property string address_text_: address_text
+
+                        text: (address_text_ == "")?"Введите адрес":address_text_
+
+                        font.pointSize: 10
+                        font.family: sf_font.name
+
+                        color: (address_text_ == "")?"lightgray":"black"
+
+                        anchors.verticalCenter: parent.verticalCenter
+
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                route_text_input_delegate.text = parent.address_text_
+                                route_text_input_delegate.visible = true;
+
+                                route_text_input_delegate.st
+
+                                parent.visible = false
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        height: 2
+                        width: parent.width
+
+                        anchors.bottom: parent.bottom
+                        color: "lightgray"
+                    }
+
+                    TextInput {
+                        id: route_text_input_delegate
+
+                        anchors.fill: parent
+
+                        visible: false
+
+                        verticalAlignment: TextInput.AlignVCenter
+
+                        font.pointSize: 10
+                        font.family: sf_font.name
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    Rectangle {
+        id: add_address_button
+
+        height: button_add_adress_container_heigth
+        width: parent.width * 0.9
+
+        anchors.top: route_container.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
 
         Rectangle {
 
-            id: route_from_icon_wrapper
+            id: add_address_button_icon_wrapper
 
-            height: route_container_item_heigth
+            height: parent.height * 0.7
             width: height
+
+            color: "transparent"
 
             anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
 
-            color: "transparent"
             Image {
-                id: route_from_icon
+                id: add_address_icon
 
-                height: parent.height * 0.3
+                height: parent.height
                 width: height
 
                 smooth: true
 
                 anchors.centerIn: parent
 
-                source: route_from_icon_source
+                source: add_address_icon_source
             }
         }
 
         Rectangle {
-            anchors.left: route_from_icon_wrapper.right
-            anchors.verticalCenter: route_from_icon_wrapper.verticalCenter
+            id: add_address_button_text_wrapper
 
-            width: parent.width - route_from_icon_wrapper.width
-            height: route_container_item_heigth
+            height: parent.height
 
-            color: "transparent"
+            anchors.left: add_address_button_icon_wrapper.right
+            anchors.right: parent.right
 
             Text {
-                id: route_text_from
-                text: set_from_address
-
-                font.pointSize: 10
-                font.family: sf_font.name
-
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Rectangle {
-                height: 2
-                width: parent.width
-
-                anchors.bottom: parent.bottom
-                color: "lightgray"
-            }
-        }
-
-        Rectangle {
-            id: line_from_to_to
-
-            //            anchors.top: route_from_icon_wrapper.bottom
-            //            anchors.horizontalCenter: route_from_icon_wrapper.horizontalCenter
-
-            x: route_from_icon.x + route_from_icon.width / 2
-            y: route_from_icon.y + route_from_icon.height
-
-            height: route_to_icon_wrapper.y - route_from_icon_wrapper.y // 30
-            width: 2
-
-            color: "black"
-        }
-
-        /// ELEMENTS TO
-
-
-        Rectangle {
-
-            id: route_to_icon_wrapper
-
-            height: route_container_item_heigth // parent.height * 0.9
-            width: height
-
-            anchors.horizontalCenter: route_from_icon_wrapper.horizontalCenter
-            anchors.top: route_from_icon_wrapper.bottom
-
-            //            anchors.top: line_from_to_to.bottom
-
-            x: line_from_to_to.x - width / 2
-            //            y: line_from_to_to.y + line_from_to_to.height - (height - route_to_icon.height) / 2 //  + height / 2
-
-            color: "transparent"
-            Image {
-                id: route_to_icon
-
-                height: parent.height * 0.7
-                width: height
-
-                smooth: true
-
+                id: add_button_text
+                text: qsTr("Добавить адрес")
                 anchors.centerIn: parent
-
-                source: route_to_icon_source
             }
         }
 
-        Rectangle {
-            anchors.left: route_to_icon_wrapper.right
-            anchors.verticalCenter: route_to_icon_wrapper.verticalCenter
+        MouseArea {
+            anchors.fill: parent
 
-            width: parent.width - route_to_icon_wrapper.width
-            height: route_container_item_heigth
-
-            color: "transparent"
-
-            Text {
-                id: route_text_to
-                text: "Краснопутиловская ул., 100"
-
-                font.pointSize: 10
-                font.family: sf_font.name
-
-                anchors.verticalCenter: parent.verticalCenter
+            onClicked: {
+                route_list_model.append({"address_text":""});
             }
-
-            Rectangle {
-                height: 2
-                width: parent.width
-
-                anchors.bottom: parent.bottom
-                color: "lightgray"
-            }
-        }
-
-
-        /// ELEMENTS ADD BUTTON
-
-
-        Rectangle {
-
-            id: route_add_icon_wrapper
-
-            height: route_container_item_heigth // parent.height * 0.9
-            width: height
-
-            anchors.horizontalCenter: route_to_icon_wrapper.horizontalCenter
-            anchors.top: route_to_icon_wrapper.bottom
-
-            color: "transparent"
-            Image {
-                id: route_add_icon
-
-                height: parent.height * 0.5
-                width: height
-
-                smooth: true
-
-                anchors.centerIn: parent
-
-                source: route_add_icon_source
-            }
-        }
-
-        Rectangle {
-            anchors.left: route_add_icon_wrapper.right
-            anchors.verticalCenter: route_add_icon_wrapper.verticalCenter
-
-            width: parent.width - route_add_icon_wrapper.width
-            height: route_container_item_heigth
-
-            color: "transparent"
-
-            Text {
-                id: route_text_add
-                text: "Добавить маршрут"
-
-                color: "lightgray"
-
-                font.pointSize: 10
-                font.family: sf_font.name
-
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-//            Rectangle {
-//                height: 2
-//                width: parent.width
-
-//                anchors.bottom: parent.bottom
-//                color: "lightgray"
-//            }
         }
     }
+
 
     Rectangle {
         id: route_container_to_clock_spacer
@@ -569,7 +632,7 @@ Item {
         height: route_container_to_clock_spacer_height //  parent.height * menu_to_list_spacer_height_koef
         width: parent.width
 
-        anchors.top: route_container.bottom
+        anchors.top: add_address_button.bottom
         anchors.horizontalCenter: parent.horizontalCenter
     }
 

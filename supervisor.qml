@@ -16,7 +16,7 @@ Window {
 
         repeat: false
         onTriggered: {
-            order.visible = true;
+            main.visible = true;
             splash.visible = false;
         }
     }
@@ -40,7 +40,8 @@ Window {
 
     function getOrder(address, current_index)
     {
-        order.set_from_address = address;
+        console.log("getOrder", address)
+        order.set_address_json_string = address;
         order.set_list_current_index = current_index;
 
         main.visible = false;
@@ -93,6 +94,8 @@ Window {
 
     function gotoOrdersOrder()
     {
+
+        console.log("1234")
         order.visible = true;
         orders.visible = false;
     }
@@ -114,9 +117,8 @@ Window {
         order.get_cost.connect(getCost)
         order.get_order_go.connect(getOrderGo)
 
-        orders.goto_orders_order(gotoOrdersOrder)
-        orders.goto_orders_order_with_address(gotoOrdersOrderWithAddress)
-
+        orders.goto_orders_order.connect(gotoOrdersOrder)
+        orders.goto_orders_order_with_address.connect(gotoOrdersOrderWithAddress)
 
         wait.back_to_order.connect(backToOrder)
         wait.cancel_order.connect(cancelOrder)
@@ -129,15 +131,15 @@ Window {
         anchors.fill: parent
     }
 
-    Orders {
-        id: orders
+    Main {
+        id: main
 
-        visible: false
+        visible: true
         anchors.fill: parent
     }
 
-    Main {
-        id: main
+    Orders {
+        id: orders
 
         visible: false
         anchors.fill: parent
